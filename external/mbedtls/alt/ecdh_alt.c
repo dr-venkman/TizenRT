@@ -58,7 +58,7 @@
 
 #include "mbedtls/alt/common.h"
 
-#if defined(MBEDTLS_ECDH_GEN_PUBLIC_ALT) || defined(MBEDTLS_ECDH_COMPUTE_SHARED_ALT)>> mbedtls_config
+#if defined(MBEDTLS_ECDH_GEN_PUBLIC_ALT) || defined(MBEDTLS_ECDH_COMPUTE_SHARED_ALT)
 #include "mbedtls/alt/ecdh_alt.h"
 
 /*
