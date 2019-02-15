@@ -64,6 +64,7 @@ typedef enum {
 	HAL_HASH_SHA256,
 	HAL_HASH_SHA384,
 	HAL_HASH_SHA512,
+	HAL_HASH_UNKNOWN,
 } hal_hash_type;
 
 typedef enum {
@@ -89,6 +90,7 @@ typedef enum {
 	HAL_HMAC_SHA256,
 	HAL_HMAC_SHA384,
 	HAL_HMAC_SHA512,
+	HAL_HMAC_UNKNOWN,
 } hal_hmac_type;
 
 typedef enum {
@@ -128,6 +130,7 @@ typedef enum {
 	HAL_KEY_RSA_1024, // 1024 bits rsa algorithm
 	HAL_KEY_RSA_2048, // 2048 bits rsa algorithm
 	HAL_KEY_RSA_3072, // 3072 bits rsa algorithm
+	HAL_KEY_RSA_4096,
 	/*  ECC: it doesn't support whole algorithm that mbedTLS support. it's have to be added*/
 	HAL_KEY_ECC_BRAINPOOL_P256R1, // ecc brainpool curve for p256r1
 	HAL_KEY_ECC_BRAINPOOL_P384R1, // ecc brainpool curve for p384r1
@@ -145,9 +148,15 @@ typedef enum {
 	/* DH */
 	HAL_KEY_DH_1024,
 	HAL_KEY_DH_2048,
+	HAL_KEY_UNKNOWN,
 } hal_key_type;
 
 /* Structure */
+typedef struct _hal_init_param {
+	uint32_t i2c_port;
+	uint32_t gpio;
+} hal_init_param;
+
 typedef struct _hal_data {
 	void *data;
 	uint32_t data_len;
@@ -157,6 +166,8 @@ typedef struct _hal_data {
 typedef struct _hal_rsa_mode {
 	hal_rsa_algo rsa_a;
 	hal_hash_type hash_t;
+	hal_hash_type mgf;
+	uint32_t salt_byte_len;
 } hal_rsa_mode;
 
 typedef struct _hal_aes_param {
@@ -168,16 +179,22 @@ typedef struct _hal_aes_param {
 typedef struct _hal_ecdsa_mode {
 	hal_ecdsa_curve curve;
 	hal_hash_type hash_t;
-	hal_data r;
-	hal_data s;
+	hal_data *r;
+	hal_data *s;
 } hal_ecdsa_mode;
 
 typedef struct _hal_dh_data {
 	hal_dh_key_type mode;
-	hal_data G;
-	hal_data P;
-	hal_data pubkey;
+	hal_data *G;
+	hal_data *P;
+	hal_data *pubkey;
 } hal_dh_data;
+
+typedef struct _hal_ecdh_data {
+	hal_ecdsa_curve curve;
+	hal_data *pubkey_x;
+	hal_data *pubkey_y;
+} hal_ecdh_data;
 
 typedef struct _hal_ss_info {
 	unsigned int size;
@@ -201,7 +218,7 @@ typedef struct _hal_ss_info {
  * ISP:
  * NOTE: Initialize secure channel
  */
-int hal_init(void);
+int hal_init(_IN_ hal_init_param *params);
 
 /*
  * Reference
@@ -305,6 +322,7 @@ int hal_get_hash(_IN_ hal_hash_type mode, _IN_ hal_data *input, _OUT_ hal_data *
  * Artik SEE API: int see_get_hmac(see_algorithm algo, const char *key_name, see_data data, see_data *hmac);
  * TizenRT SEE API: int see_get_hmac(struct sHMAC_MSG *hmac_msg, unsigned char *output, unsigned int object_id, unsigned int key_index)
  * ISP: int isp_hmac_securekey(unsigned char *mac, struct sHMAC_MSG *hmac_msg, unsigned int object_id, unsigned int key_index)
+ * w
  */
 int hal_get_hmac(_IN_ hal_hmac_type mode, _IN_ hal_data *input, _IN_ uint32_t key_idx, _OUT_ hal_data *hmac);
 
@@ -333,7 +351,7 @@ int hal_rsa_verify_md(_IN_ hal_rsa_mode mode, _IN_ hal_data *hash, _IN_ hal_data
  * TizenRT SEE API: int see_get_ecdsa_signature(struct sECC_SIGN *ecc_sign, unsigned char *hash, unsigned int hash_len, unsigned int key_index)
  * ISP: int isp_ecdsa_sign_md_securekey(struct sECC_SIGN *ecc_sign, unsigned char *msg_digest, unsigned int msg_digest_byte_len, unsigned int key_index)
  */
-int hal_ecdsa_sign_md(_IN_ hal_ecdsa_mode mode, _IN_ hal_data *hash, _IN_ uint32_t key_idx, _OUT_ hal_data *sign);
+int hal_ecdsa_sign_md(_IN_ hal_data *hash, _IN_ uint32_t key_idx, _INOUT_ hal_ecdsa_mode *mode, _OUT_ hal_data *sign);
 
 /*
  * Reference
@@ -365,7 +383,7 @@ int hal_dh_generate_param(_IN_ uint32_t dh_idx, _INOUT_ hal_dh_data *dh_param);
  * TizenRT SEE API: int see_compute_dhm_param(struct sDH_PARAM *d_param, unsigned int key_index, unsigned char *output, unsigned int *olen)
  * ISP: int isp_dh_compute_shared_secret_securekey(unsigned char *shared_secret, unsigned int *shared_secret_byte_len, struct sDH_PARAM dh_publickey, unsigned int key_index);
  */
-int hal_dh_compute_shared_secret(_IN_ hal_dh_data *param, _IN_ uint32_t dh_idx, _OUT_ hal_data *shared_secret);
+int hal_dh_compute_shared_secret(_IN_ hal_dh_data *dh_param, _IN_ uint32_t dh_idx, _OUT_ hal_data *shared_secret);
 
 /*
  * Reference
@@ -375,7 +393,7 @@ int hal_dh_compute_shared_secret(_IN_ hal_dh_data *param, _IN_ uint32_t dh_idx, 
  * ISP: int isp_compute_ecdh_securekey(unsigned char *shared_secret, unsigned int *shared_secret_byte_len, struct sECC_KEY ecc_publickey, unsigned int key_index);
  * NOTE: pubkey denotes a public key from the target which tries to share a secret
  */
-int hal_ecdh_compute_shared_secret(_IN_ hal_data *pubkey, _IN_ uint32_t key_idx, _OUT_ hal_data *shared_secret);
+int hal_ecdh_compute_shared_secret(_IN_ hal_ecdh_data *ecdh_mode, _IN_ uint32_t key_idx, _OUT_ hal_data *shared_secret);
 
 /*
  * Reference
@@ -409,12 +427,30 @@ int hal_remove_certificate(_IN_ uint32_t cert_idx);
 
 /*
  * Reference
- * Desc: Get factorykey data
+ * Desc: Get factory key
  * Artik SEE API: -
  * TizenRT SEE API: int see_get_publickey(unsigned char *key_der, unsigned int *key_len)
  * ISP: int isp_get_factorykey_data(unsigned char *data, unsigned int *data_byte_len, unsigned int data_id);
  */
-int hal_get_factorykey_data(_IN_ uint32_t key_idx, _IN_ hal_data *data);
+
+int hal_get_factory_key(_IN_ uint32_t key_idx, _IN_ hal_data *key);
+/*
+ * Reference
+ * Desc: Get factory cert
+ * Artik SEE API: -
+ * TizenRT SEE API:
+ * ISP: int isp_get_factorykey2_data(unsigned char *data, unsigned int *data_byte_len, unsigned int data_id);
+ */
+int hal_get_factory_cert(_IN_ uint32_t cert_idx, _IN_ hal_data *cert);
+
+/*
+ * Reference
+ * Desc: Get factory data
+ * Artik SEE API: -
+ * TizenRT SEE API:
+ * ISP: int isp_get_factorykey2_data(unsigned char *data, unsigned int *data_byte_len, unsigned int data_id);
+ */
+int hal_get_factory_data(_IN_ uint32_t data_idx, _IN_ hal_data *data);
 
 
 /**
@@ -446,7 +482,7 @@ int hal_aes_decrypt(_IN_ hal_data *enc_data, _IN_ hal_aes_param *aes_param, _IN_
  * TizenRT SEE API: int see_rsa_encryption(unsigned int key_index, unsigned int pad_type, unsigned char *output, unsigned int *outlen, unsigned char *input, unsigned int inlen)
  * ISP: int isp_rsa_encrypt_securekey(unsigned char *output, unsigned int *output_byte_len, unsigned char *input, unsigned int input_byte_len, unsigned int key_index)
  */
-int hal_rsa_encrypt(_IN_ hal_data *dec_data, _IN_ uint32_t key_idx, _OUT_ hal_data *enc_data);
+int hal_rsa_encrypt(_IN_ hal_data *dec_data, _IN_ hal_rsa_mode *mode, _IN_ uint32_t key_idx, _OUT_ hal_data *enc_data);
 
 /*
  * Reference
@@ -455,7 +491,7 @@ int hal_rsa_encrypt(_IN_ hal_data *dec_data, _IN_ uint32_t key_idx, _OUT_ hal_da
  * TizenRT SEE API:
  * ISP:
  */
-int hal_rsa_decrypt(_IN_ hal_data *enc_data, _IN_ uint32_t key_idx, _OUT_ hal_data *dec_data);
+int hal_rsa_decrypt(_IN_ hal_data *enc_data, _IN_ hal_rsa_mode *mode, _IN_ uint32_t key_idx, _OUT_ hal_data *dec_data);
 
 
 /**

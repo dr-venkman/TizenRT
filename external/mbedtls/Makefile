@@ -56,6 +56,8 @@
 ASRCS		=
 CSRCS		= 
 
+CFLAGS += -I$(TOPDIR)/../external/include/
+
 SRC_CRYPTO_CSRCS =    aes.c           aesni.c         arc4.c                         \
                       asn1parse.c     asn1write.c     base64.c                       \
                       bignum.c        blowfish.c      camellia.c                     \

@@ -1,16 +1,36 @@
+/****************************************************************************
+ *
+ * Copyright 2019 Samsung Electronics All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ ****************************************************************************/
+
+#include <tinyara/config.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <security_hal.h>
+#include <tinyara/security_hal.h>
 #include <stress_tool/st_perf.h>
 #include "hal_test_utils.h"
 
 /*  Configuration */
-#define HAL_SS_TEST_TRIAL 5
+#define HAL_SS_TEST_TRIAL 10
 #define HAL_SS_TEST_LIMIT_TIME 100000000
 
 #define HAL_TEST_SECURE_STORAGE_MAX_SLOT_INDEX 8
-#define HAL_TEST_SECURE_STORAGE_MAX_DATA 256
+#define HAL_TEST_SECURE_STORAGE_MAX_DATA 64
 
 /*
  * Desc: Write data in secure storage
@@ -35,7 +55,7 @@ TEST_TEARDOWN(write_storage)
 	ST_START_TEST;
 
 	for (uint32_t i = 0; i < HAL_TEST_SECURE_STORAGE_MAX_SLOT_INDEX; i++) {
-		ST_EXPECT(0, hal_delete_storage(i));
+		ST_EXPECT_2(HAL_SUCCESS, HAL_NOT_SUPPORTED, hal_delete_storage(i));
 	}
 
 	ST_END_TEST;
@@ -46,7 +66,7 @@ TEST_F(write_storage)
 	ST_START_TEST;
 
 	for (uint32_t i = 0; i < HAL_TEST_SECURE_STORAGE_MAX_SLOT_INDEX; i++) {
-		ST_EXPECT(0, hal_write_storage(i, &g_input));
+		ST_EXPECT_2(HAL_SUCCESS, HAL_NOT_SUPPORTED, hal_write_storage(i, &g_input));
 	}
 
 	ST_END_TEST;
@@ -63,9 +83,9 @@ TEST_SETUP(read_storage)
 	unsigned char input[HAL_TEST_SECURE_STORAGE_MAX_DATA];
 	memset(input, 1, HAL_TEST_SECURE_STORAGE_MAX_DATA);
 	g_input.data = input;
-	g_input.data_len = sizeof(input);
+	g_input.data_len = HAL_TEST_SECURE_STORAGE_MAX_DATA;
 	for (uint32_t i = 0; i < HAL_TEST_SECURE_STORAGE_MAX_SLOT_INDEX; i++) {
-		ST_EXPECT(0, hal_write_storage(i, &g_input));
+		ST_EXPECT_2(HAL_SUCCESS, HAL_NOT_SUPPORTED, hal_write_storage(i, &g_input));
 	}
 
 	ST_END_TEST;
@@ -76,7 +96,7 @@ TEST_TEARDOWN(read_storage)
 	ST_START_TEST;
 
 	for (uint32_t i = 0; i < HAL_TEST_SECURE_STORAGE_MAX_SLOT_INDEX; i++) {
-		ST_EXPECT(0, hal_delete_storage(i));
+		ST_EXPECT_2(HAL_SUCCESS, HAL_NOT_SUPPORTED, hal_delete_storage(i));
 		hal_free_data(&g_output[i]);
 	}
 
@@ -88,7 +108,7 @@ TEST_F(read_storage)
 	ST_START_TEST;
 
 	for (uint32_t i = 0; i < HAL_TEST_SECURE_STORAGE_MAX_SLOT_INDEX; i++) {
-		ST_EXPECT(0, hal_read_storage(i, &g_output[i]));
+		ST_EXPECT_2(HAL_SUCCESS, HAL_NOT_SUPPORTED, hal_read_storage(i, &g_output[i]));
 	}
 
 	ST_END_TEST;
@@ -105,9 +125,9 @@ TEST_SETUP(delete_storage)
 	unsigned char input[HAL_TEST_SECURE_STORAGE_MAX_DATA];
 	memset(input, 1, HAL_TEST_SECURE_STORAGE_MAX_DATA);
 	g_input.data = input;
-	g_input.data_len = sizeof(input);
+	g_input.data_len = HAL_TEST_SECURE_STORAGE_MAX_DATA;;
 	for (uint32_t i = 0; i < HAL_TEST_SECURE_STORAGE_MAX_SLOT_INDEX; i++) {
-		ST_EXPECT(0, hal_write_storage(i, &g_input));
+		ST_EXPECT_2(HAL_SUCCESS, HAL_NOT_SUPPORTED, hal_write_storage(1, &g_input));
 	}
 
 	ST_END_TEST;
@@ -125,7 +145,7 @@ TEST_F(delete_storage)
 	ST_START_TEST;
 
 	for (uint32_t i = 0; i < HAL_TEST_SECURE_STORAGE_MAX_SLOT_INDEX; i++) {
-		ST_EXPECT(0, hal_delete_storage(i));
+		ST_EXPECT_2(HAL_SUCCESS, HAL_NOT_SUPPORTED, hal_delete_storage(i));
 	}
 
 	ST_END_TEST;

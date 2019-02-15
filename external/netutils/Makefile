@@ -98,6 +98,8 @@ CSRCS += netlib_ipmsfilter.c
 endif
 endif
 
+CFLAGS += -I$(TOPDIR)$(DELIM)$(EXTDIR)$(DELIM)include$(DELIM)
+
 AOBJS		= $(ASRCS:.S=$(OBJEXT))
 COBJS		= $(CSRCS:.c=$(OBJEXT))
 

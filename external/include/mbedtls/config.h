@@ -463,7 +463,7 @@
  * Requires MBEDTLS_ENTROPY_C, MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES
  *
  */
-//#define MBEDTLS_TEST_NULL_ENTROPY
+#define MBEDTLS_TEST_NULL_ENTROPY
 
 /**
  * \def MBEDTLS_ENTROPY_HARDWARE_ALT
@@ -476,7 +476,7 @@
  *
  * Uncomment to use your own hardware entropy collector.
  */
-#define MBEDTLS_ENTROPY_HARDWARE_ALT
+//#define MBEDTLS_ENTROPY_HARDWARE_ALT
 
 /**
  * \def MBEDTLS_AES_ROM_TABLES
@@ -990,7 +990,7 @@
  *
  * Uncomment this macro to prevent loading of default entropy functions.
  */
-//#define MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES
+#define MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES
 
 /**
  * \def MBEDTLS_NO_PLATFORM_ENTROPY
@@ -1001,7 +1001,9 @@
  *
  * Uncomment this macro to disable the built-in platform entropy functions.
  */
+#if !defined(CONFIG_DEV_URANDOM)
 #define MBEDTLS_NO_PLATFORM_ENTROPY
+#endif
 
 /**
  * \def MBEDTLS_ENTROPY_FORCE_SHA256

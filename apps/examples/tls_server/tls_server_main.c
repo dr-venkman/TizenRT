@@ -1539,7 +1539,7 @@ usage:
 	/*
 	 * 2. Setup the listening TCP socket
 	 */
-	mbedtls_printf("  . Bind on %s://%s:%s/ ...", opt.transport == MBEDTLS_SSL_TRANSPORT_STREAM ? "tcp" : "udp", opt.server_addr ? opt.server_addr : "*", opt.server_port);
+	mbedtls_printf("  . Bind on %s://%s:%s/ ...", opt.transport == MBEDTLS_SSL_TRANSPORT_STREAM ? "tcp" : "udp", opt.server_addr ? opt.server_addr : "127.0.0.1", opt.server_port);
 	fflush(stdout);
 
 	if ((ret = mbedtls_net_bind(&listen_fd, opt.server_addr, opt.server_port, opt.transport == MBEDTLS_SSL_TRANSPORT_STREAM ? MBEDTLS_NET_PROTO_TCP : MBEDTLS_NET_PROTO_UDP)) != 0) {
@@ -2263,7 +2263,7 @@ int tls_server_main(int argc, char **argv)
 	struct pthread_arg args;
 	args.argc = argc;
 	args.argv = argv;
-
+	printf("tls_server_main started\n");
 	/* Initialize the attribute variable */
 	if ((r = pthread_attr_init(&attr)) != 0) {
 		printf("%s: pthread_attr_init failed, status=%d\n", __func__, r);

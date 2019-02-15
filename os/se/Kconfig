@@ -20,6 +20,11 @@ config SE_KONAI
 	bool "KONAI"
 	---help---
 		KONAI SE chip
+
+config SE_VIRTUAL
+	bool "Virtual SE chip"
+	---help---
+		Enable Virtual SE chip for testing
 endchoice
 
 if SE_SSS
@@ -28,6 +33,10 @@ endif
 
 if SE_KONAI
 source se/konai/Kconfig
+endif
+
+if SE_VIRTUAL
+source se/virtual/Kconfig
 endif
 
 endif

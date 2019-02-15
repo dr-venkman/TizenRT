@@ -67,6 +67,8 @@ ASRCS =
 CSRCS =
 MAINSRC =
 
+CFLAGS += -I../../../external/include/
+
 ifneq ($(CONFIG_DISABLE_ENVIRON),y)
 CSRCS += fs_getpath.c
 endif

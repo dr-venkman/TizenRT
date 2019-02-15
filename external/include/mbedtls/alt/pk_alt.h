@@ -75,9 +75,6 @@
 extern "C" {
 #endif
 
-int mbedtls_setup_key_alt( unsigned char *key_der, unsigned int key_len,
-                           unsigned int key_type, unsigned char *key_buf );
-
 int mbedtls_get_ecdsa_signature_alt( struct mbedtls_sECC_SIGN *ecc_sign, unsigned char *hash,
 				unsigned int hash_len, unsigned int key_index );
 

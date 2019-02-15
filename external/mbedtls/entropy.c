@@ -127,7 +127,7 @@ void mbedtls_entropy_init( mbedtls_entropy_context *ctx )
                                 MBEDTLS_ENTROPY_MIN_HAVEGE,
                                 MBEDTLS_ENTROPY_SOURCE_STRONG );
 #endif
-#if defined(MBEDTLS_ENTROPY_HARDWARE_ALT) && defined(CONFIG_HW_RNG)
+#if defined(MBEDTLS_ENTROPY_HARDWARE_ALT)
     mbedtls_entropy_add_source( ctx, mbedtls_hardware_poll, NULL,
                                 MBEDTLS_ENTROPY_MIN_HARDWARE,
                                 MBEDTLS_ENTROPY_SOURCE_STRONG );
@@ -169,10 +169,9 @@ int mbedtls_entropy_add_source( mbedtls_entropy_context *ctx,
     int idx, ret = 0;
 
 #if defined(MBEDTLS_THREADING_C)
-    if( ( ret = mbedtls_mutex_lock( &ctx->mutex ) ) != 0 )
-        return( ret );
+//    if( ( ret = mbedtls_mutex_lock( &ctx->mutex ) ) != 0 )
+//        return( ret );
 #endif
-
     idx = ctx->source_count;
     if( idx >= MBEDTLS_ENTROPY_MAX_SOURCES )
     {
@@ -189,8 +188,8 @@ int mbedtls_entropy_add_source( mbedtls_entropy_context *ctx,
 
 exit:
 #if defined(MBEDTLS_THREADING_C)
-    if( mbedtls_mutex_unlock( &ctx->mutex ) != 0 )
-        return( MBEDTLS_ERR_THREADING_MUTEX_ERROR );
+//    if( mbedtls_mutex_unlock( &ctx->mutex ) != 0 )
+//        return( MBEDTLS_ERR_THREADING_MUTEX_ERROR );
 #endif
 
     return( ret );
@@ -284,8 +283,10 @@ static int entropy_gather_internal( mbedtls_entropy_context *ctx )
     unsigned char buf[MBEDTLS_ENTROPY_MAX_GATHER];
     size_t olen;
 
-    if( ctx->source_count == 0 )
+    if( ctx->source_count == 0 ) {
+    	printf("\tret0000 = %d \n", ret);
         return( MBEDTLS_ERR_ENTROPY_NO_SOURCES_DEFINED );
+    }
 
     /*
      * Run through our entropy sources
@@ -299,6 +300,7 @@ static int entropy_gather_internal( mbedtls_entropy_context *ctx )
         if( ( ret = ctx->source[i].f_source( ctx->source[i].p_source,
                         buf, MBEDTLS_ENTROPY_MAX_GATHER, &olen ) ) != 0 )
         {
+        	printf("\n\n\tret = %d \n\n", ret);
             goto cleanup;
         }
 
@@ -308,8 +310,10 @@ static int entropy_gather_internal( mbedtls_entropy_context *ctx )
         if( olen > 0 )
         {
             if( ( ret = entropy_update( ctx, (unsigned char) i,
-                                        buf, olen ) ) != 0 )
+                                        buf, olen ) ) != 0 ) {
+            	printf("\n\n\tret2 = %d \n\n", ret);
                 return( ret );
+            }
             ctx->source[i].size += olen;
         }
     }
@@ -350,9 +354,11 @@ int mbedtls_entropy_func( void *data, unsigned char *output, size_t len )
     int ret, count = 0, i, done;
     mbedtls_entropy_context *ctx = (mbedtls_entropy_context *) data;
     unsigned char buf[MBEDTLS_ENTROPY_BLOCK_SIZE];
-
-    if( len > MBEDTLS_ENTROPY_BLOCK_SIZE )
-        return( MBEDTLS_ERR_ENTROPY_SOURCE_FAILED );
+//    printf("\tENTER 111111111, ret = %d      %d\n", ret, len);
+    if( len > MBEDTLS_ENTROPY_BLOCK_SIZE ) {
+//    	printf("\tENTER 2222222222, ret = %d\n", ret);
+    	return( MBEDTLS_ERR_ENTROPY_SOURCE_FAILED );
+    }
 
 #if defined(MBEDTLS_ENTROPY_NV_SEED)
     /* Update the NV entropy seed before generating any entropy for outside
@@ -361,19 +367,27 @@ int mbedtls_entropy_func( void *data, unsigned char *output, size_t len )
     if( ctx->initial_entropy_run == 0 )
     {
         ctx->initial_entropy_run = 1;
-        if( ( ret = mbedtls_entropy_update_nv_seed( ctx ) ) != 0 )
+//        printf("\tENTER 33333333333, ret = %d\n", ret);
+        if( ( ret = mbedtls_entropy_update_nv_seed( ctx ) ) != 0 ) {
+//        	printf("\tENTER 44444444444, ret = %d\n", ret);
             return( ret );
+        }
     }
 #endif
 
 #if defined(MBEDTLS_THREADING_C)
-    if( ( ret = mbedtls_mutex_lock( &ctx->mutex ) ) != 0 )
-        return( ret );
+//    printf("\tENTER 55555555555, ret = %d\n", ret);
+//    if( ( ret = mbedtls_mutex_lock( &ctx->mutex ) ) != 0 ) {
+////    	printf("\tENTER 66666666666, ret = %d\n", ret);
+//        return( ret );
+//    }
 #endif
 
     /*
      * Always gather extra entropy before a call
      */
+//    printf("\tENTER 777777777777, ret = %d\n", ret);
+
     do
     {
         if( count++ > ENTROPY_MAX_LOOP )
@@ -382,8 +396,10 @@ int mbedtls_entropy_func( void *data, unsigned char *output, size_t len )
             goto exit;
         }
 
-        if( ( ret = entropy_gather_internal( ctx ) ) != 0 )
+        if( ( ret = entropy_gather_internal( ctx ) ) != 0 ) {
+//        	printf("\tENTER 888888, ret = %d\n", ret);
             goto exit;
+        }
 
         done = 1;
         for( i = 0; i < ctx->source_count; i++ )
@@ -454,10 +470,10 @@ exit:
     mbedtls_zeroize( buf, sizeof( buf ) );
 
 #if defined(MBEDTLS_THREADING_C)
-    if( mbedtls_mutex_unlock( &ctx->mutex ) != 0 )
-        return( MBEDTLS_ERR_THREADING_MUTEX_ERROR );
+//    if( mbedtls_mutex_unlock( &ctx->mutex ) != 0 )
+//        return( MBEDTLS_ERR_THREADING_MUTEX_ERROR );
 #endif
-
+//    printf("\tERROR33333333333333333333, ret = %d\n", ret);
     return( ret );
 }
 
@@ -560,7 +576,7 @@ static int entropy_dummy_source( void *data, unsigned char *output,
 }
 #endif /* !MBEDTLS_TEST_NULL_ENTROPY */
 
-#if defined(MBEDTLS_ENTROPY_HARDWARE_ALT) && defined(CONFIG_HW_RNG)
+#if defined(MBEDTLS_ENTROPY_HARDWARE_ALT)
 
 static int mbedtls_entropy_source_self_test_gather( unsigned char *buf, size_t buf_len )
 {
@@ -656,7 +672,7 @@ cleanup:
     return( ret != 0 );
 }
 
-#endif /* MBEDTLS_ENTROPY_HARDWARE_ALT & CONFIG_HW_RNG */
+#endif /* MBEDTLS_ENTROPY_HARDWARE_ALT */
 
 /*
  * The actual entropy quality is hard to test, but we can at least
@@ -717,7 +733,7 @@ int mbedtls_entropy_self_test( int verbose )
         }
     }
 
-#if defined(MBEDTLS_ENTROPY_HARDWARE_ALT) && defined (CONFIG_HW_RNG)
+#if defined(MBEDTLS_ENTROPY_HARDWARE_ALT)
     if( ( ret = mbedtls_entropy_source_self_test( 0 ) ) != 0 )
         goto cleanup;
 #endif

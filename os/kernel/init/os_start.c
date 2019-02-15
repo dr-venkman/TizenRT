@@ -94,7 +94,9 @@
 #ifdef CONFIG_KERNEL_TEST_DRV
 #include <tinyara/testcase_drv.h>
 #endif
-
+#ifdef CONFIG_SECURITY_LINK_DRV
+#include <tinyara/seclink_drv.h>
+#endif
 #include <tinyara/mm/heap_regioninfo.h>
 extern bool heapx_is_init[CONFIG_MM_NHEAPS];
 
@@ -528,6 +530,10 @@ void os_start(void)
 
 #ifdef CONFIG_KERNEL_TEST_DRV
 	test_drv_register();
+#endif
+
+#ifdef CONFIG_SECURITY_LINK_DRV
+	seclink_register(NULL);
 #endif
 
 #if defined(CONFIG_DEBUG_SYSTEM)
