@@ -66,6 +66,8 @@ THREADEXEC = TASH_EXECMD_ASYNC
 
 ASRCS =
 CSRCS = hal_auth_test.c hal_crypto_test.c hal_keymgr_test.c hal_ss_test.c hal_test_utils.c
+CSRCS += seclink.c seclink_test.c
+
 MAINSRC = security_test_main.c
 
 AOBJS = $(ASRCS:.S=$(OBJEXT))

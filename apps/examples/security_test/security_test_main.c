@@ -66,6 +66,7 @@ extern int hal_auth_test(void);
 extern int hal_ss_test(void);
 extern int hal_crypto_test(void);
 
+extern int seclink_test(void);
 
 #ifdef CONFIG_BUILD_KERNEL
 int main(int argc, FAR char *argv[])
@@ -74,10 +75,26 @@ int security_test_main(int argc, char *argv[])
 #endif
 {
 	int res = 0;
-	res = hal_keymgr_test();
-	res = hal_auth_test();
-	res = hal_ss_test();
-	res = hal_crypto_test();
+	/* res = hal_keymgr_test(); */
+	/* if (res < 0) { */
+	/* 	printf("hal key manager test fail\n"); */
+	/* } */
+	/* res = hal_auth_test(); */
+	/* if (res < 0) { */
+	/* 	printf("hal authenticate test fail\n"); */
+	/* } */
+	/* res = hal_ss_test(); */
+	/* if (res < 0) { */
+	/* 	printf("hal secure storage test fail\n"); */
+	/* } */
+	/* res = hal_crypto_test(); */
+	/* if (res < 0) { */
+	/* 	printf("hal crypto test fail\n"); */
+	/* } */
 
+	res = seclink_test();
+	if (res < 0) {
+		printf("sec link test fail\n");
+	}
 	return 0;
 }

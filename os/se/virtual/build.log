@@ -507,6 +507,7 @@ LN: platform/board to /root/tizenrt/apps/platform/dummy
 make[3]: Leaving directory '/root/tizenrt/apps/platform'
 make[2]: Leaving directory '/root/tizenrt/apps'
 make[2]: Entering directory '/root/tizenrt/apps/examples/security_test'
+make[2]: Nothing to be done for 'depend'.
 make[2]: Leaving directory '/root/tizenrt/apps/examples/security_test'
 make[2]: Entering directory '/root/tizenrt/apps/examples/hello'
 make[2]: Nothing to be done for 'depend'.
@@ -577,8 +578,7 @@ make[1]: 'libarch.a' is up to date.
 make[1]: Leaving directory '/root/tizenrt/os/arch/arm/src'
 make[1]: Entering directory '/root/tizenrt/apps'
 make[2]: Entering directory '/root/tizenrt/apps/examples/security_test'
-CC:  seclink_test.c
-AR:   hal_auth_test.o hal_crypto_test.o hal_keymgr_test.o hal_ss_test.o hal_test_utils.o seclink.o seclink_test.o security_test_main.o
+make[2]: Nothing to be done for 'all'.
 make[2]: Leaving directory '/root/tizenrt/apps/examples/security_test'
 make[2]: Entering directory '/root/tizenrt/apps/examples/hello'
 make[2]: Nothing to be done for 'all'.
@@ -654,12 +654,12 @@ ATTACHNS2: tinyara.bin --> tinyara_head.bin
 	.data 	.bss 	.text 	 Total
 	88 	44 	93788 	93920 	libfs.a
 	24 	116 	52180 	52320 	libc.a
-	3252 	16 	45036 	48304 	libapps.a
-	0 	3116 	43741 	46857 	libkernel.a
+	3252 	16 	44932 	48200 	libapps.a
+	0 	3116 	43745 	46861 	libkernel.a
 	0 	0 	21948 	21948 	libdrivers.a
 	1012 	2568 	18281 	21861 	libarch.a
 	8 	852 	11151 	12011 	libmm.a
 	0 	0 	5836 	5836 	libgcc.a
-	0 	0 	3272 	3272 	libse.a
+	12 	0 	3248 	3260 	libse.a
 	0 	0 	2936 	2936 	libboard.a
 	0 	0 	64 	64 	NOLIB

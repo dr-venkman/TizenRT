@@ -6,7 +6,6 @@ LN: include/arch/board to board/artik05x/include
 LN: include/arch/chip to arch/arm/include/s5j
 LN: arch/arm/src/chip to arch/arm/src/s5j
 LN: include/apps to ../apps/include
-Previous Build Outputs - ../build/output/bin - are deleted
 make[1]: Entering directory '/root/tizenrt/apps'
 make[2]: Entering directory '/root/tizenrt/apps/examples'
 make[3]: Entering directory '/root/tizenrt/apps/examples/mtdpart'
@@ -507,6 +506,7 @@ LN: platform/board to /root/tizenrt/apps/platform/dummy
 make[3]: Leaving directory '/root/tizenrt/apps/platform'
 make[2]: Leaving directory '/root/tizenrt/apps'
 make[2]: Entering directory '/root/tizenrt/apps/examples/security_test'
+make[2]: Nothing to be done for 'depend'.
 make[2]: Leaving directory '/root/tizenrt/apps/examples/security_test'
 make[2]: Entering directory '/root/tizenrt/apps/examples/hello'
 make[2]: Nothing to be done for 'depend'.
@@ -550,6 +550,7 @@ make[1]: Entering directory '/root/tizenrt/tools'
 make[1]: Nothing to be done for 'depend'.
 make[1]: Leaving directory '/root/tizenrt/tools'
 make[1]: Entering directory '/root/tizenrt/os/se'
+make[1]: Nothing to be done for 'depend'.
 make[1]: Leaving directory '/root/tizenrt/os/se'
 make[1]: Entering directory '/root/tizenrt/lib/libc'
 make[1]: Nothing to be done for 'depend'.
@@ -560,7 +561,6 @@ make[1]: Entering directory '/root/tizenrt/os/fs'
 make[1]: Nothing to be done for 'depend'.
 make[1]: Leaving directory '/root/tizenrt/os/fs'
 make[1]: Entering directory '/root/tizenrt/os/drivers'
-make[1]: Nothing to be done for 'depend'.
 make[1]: Leaving directory '/root/tizenrt/os/drivers'
 make[1]: Entering directory '/root/tizenrt/os/kernel'
 make[1]: 'libkernel.a' is up to date.
@@ -577,8 +577,7 @@ make[1]: 'libarch.a' is up to date.
 make[1]: Leaving directory '/root/tizenrt/os/arch/arm/src'
 make[1]: Entering directory '/root/tizenrt/apps'
 make[2]: Entering directory '/root/tizenrt/apps/examples/security_test'
-CC:  seclink_test.c
-AR:   hal_auth_test.o hal_crypto_test.o hal_keymgr_test.o hal_ss_test.o hal_test_utils.o seclink.o seclink_test.o security_test_main.o
+make[2]: Nothing to be done for 'all'.
 make[2]: Leaving directory '/root/tizenrt/apps/examples/security_test'
 make[2]: Entering directory '/root/tizenrt/apps/examples/hello'
 make[2]: Nothing to be done for 'all'.
@@ -624,42 +623,27 @@ CC:  procfs/fs_procfsversion.c
 AR:   fs_initialize.o fs_files.o fs_foreachinode.o fs_inode.o fs_inodeaddref.o fs_inodebasename.o fs_inodefind.o fs_inoderelease.o fs_inoderemove.o fs_inodereserve.o fs_close.o fs_dup.o fs_dup2.o fs_fcntl.o fs_dupfd.o fs_dupfd2.o fs_fstat.o fs_fstatfs.o fs_getfilep.o fs_ioctl.o fs_lseek.o fs_mkdir.o fs_open.o fs_poll.o fs_read.o fs_rename.o fs_rmdir.o fs_stat.o fs_statfs.o fs_select.o fs_unlink.o fs_write.o fs_fsync.o fs_pread.o fs_pwrite.o fs_fdopen.o fs_registerdriver.o fs_unregisterdriver.o fs_registerblockdriver.o fs_unregisterblockdriver.o fs_findblockdriver.o fs_openblockdriver.o fs_closeblockdriver.o ramdisk.o fs_blockproxy.o mtd_config.o ftl.o smart.o mtd_procfs.o mtd_partition.o mtd_progmem.o fs_closedir.o fs_opendir.o fs_readdir.o fs_rewinddir.o fs_seekdir.o mq_open.o mq_close.o mq_unlink.o fs_mount.o fs_umount.o fs_foreachmountpoint.o smartfs_smart.o smartfs_utils.o smartfs_procfs.o smartfs_mksmartfs.o fs_procfs.o fs_procfsutil.o fs_procfsproc.o fs_procfsuptime.o fs_procfscpuload.o fs_procfsversion.o
 make[1]: Leaving directory '/root/tizenrt/os/fs'
 make[1]: Entering directory '/root/tizenrt/os/drivers'
-make[1]: 'libdrivers.a' is up to date.
+CC:  seclink/seclink_drv_auth.c
+seclink/seclink_drv_auth.c: In function 'hd_handle_auth_reqeust':
+seclink/seclink_drv_auth.c:27:66: error: passing argument 3 of 'hal_get_hmac' makes integer from pointer without a cast [-Werror=int-conversion]
+   req->res = hal_get_hmac(info->auth_type.hmac_type, info->data, info->auth_data.data);
+                                                                  ^~~~
+In file included from /root/tizenrt/os/include/tinyara/seclink.h:5:0,
+                 from seclink/seclink_drv_auth.c:4:
+/root/tizenrt/os/../external/security/hal/security_hal.h:317:5: note: expected 'uint32_t {aka unsigned int}' but argument is of type 'hal_data * {aka struct _hal_data *}'
+ int hal_get_hmac(_IN_ hal_hmac_type mode, _IN_ hal_data *input, _IN_ uint32_t key_idx, _OUT_ hal_data *hmac);
+     ^~~~~~~~~~~~
+seclink/seclink_drv_auth.c:27:14: error: too few arguments to function 'hal_get_hmac'
+   req->res = hal_get_hmac(info->auth_type.hmac_type, info->data, info->auth_data.data);
+              ^~~~~~~~~~~~
+In file included from /root/tizenrt/os/include/tinyara/seclink.h:5:0,
+                 from seclink/seclink_drv_auth.c:4:
+/root/tizenrt/os/../external/security/hal/security_hal.h:317:5: note: declared here
+ int hal_get_hmac(_IN_ hal_hmac_type mode, _IN_ hal_data *input, _IN_ uint32_t key_idx, _OUT_ hal_data *hmac);
+     ^~~~~~~~~~~~
+cc1: all warnings being treated as errors
+make[1]: *** [seclink_drv_auth.o] Error 1
+Makefile:148: recipe for target 'seclink_drv_auth.o' failed
 make[1]: Leaving directory '/root/tizenrt/os/drivers'
-make[1]: Entering directory '/root/tizenrt/os/se'
-CC:  virtual/hal_virtual.c
-AR:  virtual/hal_virtual.o
-make[1]: Leaving directory '/root/tizenrt/os/se'
-make[1]: Entering directory '/root/tizenrt/framework'
-make[1]: 'libframework.a' is up to date.
-make[1]: Leaving directory '/root/tizenrt/framework'
-make[1]: Entering directory '/root/tizenrt/os/arch/arm/src'
-make[2]: Entering directory '/root/tizenrt/os/board/artik05x/src'
-make[2]: 'libboard.a' is up to date.
-make[2]: Leaving directory '/root/tizenrt/os/board/artik05x/src'
-LD: tinyara
-make[1]: Leaving directory '/root/tizenrt/os/arch/arm/src'
-CP: tinyara.bin
-Start the Board Specific Work for Binary
-ATTACHNS2: tinyara.bin --> tinyara_head.bin
-
-  . Seeding the random number generator...
-  . Reading private key from '/root/tizenrt/build/configs/artik05x/../../../os/../build/configs/artik05x/tools/codesigner/rsa_private.key'
-  . Generating the RSA/SHA-256 signature
-  . Done (created "/root/tizenrt/build/configs/artik05x/../../../os/../build/output/bin/tinyara_head.bin-signed")
-
-######################################
-##          Library Sizes           ##
-######################################
-	.data 	.bss 	.text 	 Total
-	88 	44 	93788 	93920 	libfs.a
-	24 	116 	52180 	52320 	libc.a
-	3252 	16 	45036 	48304 	libapps.a
-	0 	3116 	43741 	46857 	libkernel.a
-	0 	0 	21948 	21948 	libdrivers.a
-	1012 	2568 	18281 	21861 	libarch.a
-	8 	852 	11151 	12011 	libmm.a
-	0 	0 	5836 	5836 	libgcc.a
-	0 	0 	3272 	3272 	libse.a
-	0 	0 	2936 	2936 	libboard.a
-	0 	0 	64 	64 	NOLIB
+make: *** [drivers/libdrivers.a] Error 2
+LibTargets.mk:127: recipe for target 'drivers/libdrivers.a' failed
