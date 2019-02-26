@@ -370,21 +370,50 @@ int sl_remove_certificate(sl_ctx hnd, uint32_t cert_idx)
 	return req.res;
 }
 
-int sl_get_factorykey_data(sl_ctx hnd, uint32_t key_idx, hal_data *data)
+int sl_get_factory_key(sl_ctx hnd, uint32_t key_idx, hal_data *key)
 {
 	SL_ENTER;
 
 	SL_CHECK_VALID(hnd);
 
 	struct _seclink_s_ *sl = (struct _seclink_s_ *)hnd;
-	struct seclink_auth_info info = {.auth_type.random_len = 0, key_idx, data, .auth_data.data = NULL};
+	struct seclink_auth_info info = {.auth_type.random_len = 0, key_idx, key, .auth_data.data = NULL};
 	struct seclink_req req = {.req_type.auth = &info, 0};
 
-	SL_CALL(sl, SECLINK_HAL_GETFACTORYKEY, req);
+	SL_CALL(sl, SECLINK_HAL_GETFACTORY_KEY, req);
 
 	return req.res;
 }
 
+int sl_get_factory_cert(sl_ctx hnd, uint32_t cert_idx, hal_data *cert)
+{
+	SL_ENTER;
+
+	SL_CHECK_VALID(hnd);
+
+	struct _seclink_s_ *sl = (struct _seclink_s_ *)hnd;
+	struct seclink_auth_info info = {.auth_type.random_len = 0, cert_idx, cert, .auth_data.data = NULL};
+	struct seclink_req req = {.req_type.auth = &info, 0};
+
+	SL_CALL(sl, SECLINK_HAL_GETFACTORY_CERT, req);
+
+	return req.res;
+}
+
+int sl_get_factory_data(sl_ctx hnd, uint32_t data_idx, hal_data *data)
+{
+	SL_ENTER;
+
+	SL_CHECK_VALID(hnd);
+
+	struct _seclink_s_ *sl = (struct _seclink_s_ *)hnd;
+	struct seclink_auth_info info = {.auth_type.random_len = 0, data_idx, data, .auth_data.data = NULL};
+	struct seclink_req req = {.req_type.auth = &info, 0};
+
+	SL_CALL(sl, SECLINK_HAL_GETFACTORY_DATA, req);
+
+	return req.res;
+}
 
 /*  Crypto */
 int sl_aes_encrypt(sl_ctx hnd, hal_data *dec_data, hal_aes_param *aes_param, uint32_t key_idx, _OUT_ hal_data *enc_data)

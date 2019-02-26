@@ -30,7 +30,11 @@
 #define SECLINK_HAL_SETCERTIFICATE               0x002b
 #define SECLINK_HAL_GETCERTIFICATE               0x002c
 #define SECLINK_HAL_REMOVECERTIFICATE            0x002d
-#define SECLINK_HAL_GETFACTORYKEY                0x002e
+#define SECLINK_HAL_GETFACTORY_KEY               0x002e
+#define SECLINK_HAL_GETFACTORY_CERT              0x0030
+#define SECLINK_HAL_GETFACTORY_DATA              0x0031
+
+
 
 /*  Crypto */
 #define SECLINK_CRYPTO                           0x0040
@@ -145,7 +149,11 @@ int sl_get_certificate(sl_ctx hnd, uint32_t cert_idx, _OUT_ hal_data *cert_out);
 
 int sl_remove_certificate(sl_ctx hnd, uint32_t cert_idx);
 
-int sl_get_factorykey_data(sl_ctx hnd, uint32_t key_idx, hal_data *data);
+int sl_get_factory_key(sl_ctx hnd, uint32_t key_idx, hal_data *key);
+
+int sl_get_factory_cert(sl_ctx hnd, uint32_t cert_idx, hal_data *cert);
+
+int sl_get_factory_data(sl_ctx hnd, uint32_t data_idx, hal_data *data);
 
 
 /*  Crypto */

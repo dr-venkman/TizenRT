@@ -83,8 +83,14 @@ int hd_handle_auth_reqeust(int cmd, unsigned long arg)
 	case SECLINK_HAL_REMOVECERTIFICATE:
 		req->res = hal_remove_certificate(info->key_idx);
 		break;
-	case SECLINK_HAL_GETFACTORYKEY:
-		req->res = hal_get_factorykey_data(info->key_idx, info->data);
+	case SECLINK_HAL_GETFACTORY_KEY:
+		req->res = hal_get_factory_key(info->key_idx, info->data);
+		break;
+	case SECLINK_HAL_GETFACTORY_CERT:
+		req->res = hal_get_factory_key(info->key_idx, info->data);
+		break;
+	case SECLINK_HAL_GETFACTORY_DATA:
+		req->res = hal_get_factory_key(info->key_idx, info->data);
 		break;
 	}
 	return 0;

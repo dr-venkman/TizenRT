@@ -41,6 +41,9 @@
     } while (0)
 
 #define SECTEST_KEY_IDX 1
+#define SECTEST_FACTORY_KEY_IDX 2
+#define SECTEST_FACTORY_CERT_IDX 3
+#define SECTEST_FACTORY_DATA_IDX 4
 
 void seclink_free(hal_data *data)
 {
@@ -178,7 +181,11 @@ int seclink_test(void)
 	SECTEST_CALL(sl_remove_certificate(hnd, SECTEST_KEY_IDX));
 
 	hal_data fackey;
-	SECTEST_CALL(sl_get_factorykey_data(hnd, SECTEST_KEY_IDX, &fackey));
+	hal_data faccert;
+	hal_data facdata;
+	SECTEST_CALL(sl_get_factory_key(hnd, SECTEST_FACTORY_KEY_IDX, &fackey));
+	SECTEST_CALL(sl_get_factory_cert(hnd, SECTEST_FACTORY_CERT_IDX, &faccert));
+	SECTEST_CALL(sl_get_factory_data(hnd, SECTEST_FACTORY_DATA_IDX, &facdata));
 
 	/*
 	 * Crypto

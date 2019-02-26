@@ -41,6 +41,11 @@
     } while (0)
 
 #define SECTEST_KEY_IDX 1
+#define SECTEST_FACTORY_KEY_IDX 2
+#define SECTEST_FACTORY_CERT_IDX 3
+#define SECTEST_FACTORY_DATA_IDX 4
+
+
 
 extern void test_keymanager(void);
 extern void test_crypto(void);
@@ -222,7 +227,9 @@ void selftest(void)
 	/* SAT_CALL(sl_remove_certificate( )); */
 
 	/* security_data fackey; */
-	/* SAT_CALL(sl_get_factorykey_data( )); */
+	/* SAT_CALL(sl_get_factory_key( )); */
+	/* SAT_CALL(sl_get_factory_cert( )); */
+	/* SAT_CALL(sl_get_factory_data( )); */
 
 
 	/*  Terminate handle */
