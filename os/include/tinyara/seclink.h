@@ -48,6 +48,11 @@
 struct _seclink_s_;
 typedef struct _seclink_s_ *sl_ctx;
 
+struct seclink_init_param {
+	uint32_t i2c_port;
+	uint32_t gpio;
+};
+
 struct seclink_key_info {
 	hal_key_type mode;
 	uint32_t key_idx;
@@ -95,7 +100,7 @@ struct seclink_req {
 		struct seclink_ss_info *ss;
 		struct seclink_comm_info *comm;
 	} req_type;
-
+	struct seclink_init_param *params;
 	int32_t res;
 };
 

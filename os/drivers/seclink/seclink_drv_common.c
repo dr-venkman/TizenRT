@@ -42,7 +42,9 @@ int hd_handle_common_request(int cmd, unsigned long arg)
 
 	switch (cmd) {
 	case SECLINK_HAL_INIT:
-        req->res = hal_init();
+		struct hal_init_param *params = req->params;
+
+        req->res = hal_init(params);
 		break;
 	case SECLINK_HAL_DEINIT:
 		req->res = hal_deinit();
