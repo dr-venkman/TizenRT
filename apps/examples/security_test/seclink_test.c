@@ -1,3 +1,21 @@
+/****************************************************************************
+ *
+ * Copyright 2019 Samsung Electronics All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ ****************************************************************************/
+
 #include <tinyara/config.h>
 
 #include <stdio.h>
@@ -34,8 +52,8 @@ int seclink_test(void)
 {
 	sl_ctx hnd;
 
-	hal_data *data1 = NULL;
-	hal_data *data2 = NULL;
+	hal_data data1;
+	hal_data data2;
 
 	char *pubkey_data = {"public_sssssssssssstttttttttt"};
 	char *prikey_data = {"private_sssssssssssstttttttttt"};
@@ -118,7 +136,7 @@ int seclink_test(void)
 	 */
 	SECTEST_CALL(sl_set_key(hnd, HAL_KEY_AES_128, SECTEST_KEY_IDX, &pubkey, &prikey));
 
-	SECTEST_CALL(sl_get_key(hnd, HAL_KEY_AES_192, SECTEST_KEY_IDX, data1));
+	SECTEST_CALL(sl_get_key(hnd, HAL_KEY_AES_192, SECTEST_KEY_IDX, &data1));
 
 	SECTEST_CALL(sl_remove_key(hnd, HAL_KEY_RSA_1024, SECTEST_KEY_IDX));
 
@@ -128,29 +146,29 @@ int seclink_test(void)
 	 * Authenticate
 	 */
 	#define SECTEST_RANDOM_LEN 32
-	SECTEST_CALL(sl_generate_random(hnd, SECTEST_RANDOM_LEN, data1));
+	SECTEST_CALL(sl_generate_random(hnd, SECTEST_RANDOM_LEN, &data1));
 
-	SECTEST_CALL(sl_get_hash(hnd, HAL_HASH_SHA256, &hash, data2));
+	SECTEST_CALL(sl_get_hash(hnd, HAL_HASH_SHA256, &hash, &data2));
 
-	SECTEST_CALL(sl_get_hmac(hnd, HAL_HMAC_SHA256, &hmac, SECTEST_KEY_IDX, data2));
+	SECTEST_CALL(sl_get_hmac(hnd, HAL_HMAC_SHA256, &hmac, SECTEST_KEY_IDX, &data2));
 
 	hal_rsa_mode rsa_mode = {HAL_RSASSA_PKCS1_PSS_MGF1, HAL_HASH_SHA256};
-	SECTEST_CALL(sl_rsa_sign_md(hnd, rsa_mode, &rsahash, SECTEST_KEY_IDX,data2));
+	SECTEST_CALL(sl_rsa_sign_md(hnd, rsa_mode, &rsahash, SECTEST_KEY_IDX,&data2));
 
 	SECTEST_CALL(sl_rsa_verify_md(hnd, rsa_mode, &rsahash, &sign, SECTEST_KEY_IDX));
 
 	hal_ecdsa_mode ecdsa_mode = {HAL_ECDSA_BRAINPOOL_P512R1, HAL_HASH_SHA224, &ecdsar, &ecdsas};
-	SECTEST_CALL(sl_ecdsa_sign_md(hnd, ecdsa_mode, &hash, SECTEST_KEY_IDX, data1));
+	SECTEST_CALL(sl_ecdsa_sign_md(hnd, ecdsa_mode, &hash, SECTEST_KEY_IDX, &data1));
 
 	SECTEST_CALL(sl_ecdsa_verify_md(hnd, ecdsa_mode, &hash, &sign, SECTEST_KEY_IDX));
 
 	hal_dh_data dh_mode = {HAL_DH_1024, &dhg, &dhp, NULL};
 	SECTEST_CALL(sl_dh_generate_param(hnd, SECTEST_KEY_IDX, &dh_mode));
 
-	SECTEST_CALL(sl_dh_compute_shared_secret(hnd, &dh_mode, SECTEST_KEY_IDX, data2));
+	SECTEST_CALL(sl_dh_compute_shared_secret(hnd, &dh_mode, SECTEST_KEY_IDX, &data2));
 
 	hal_ecdh_data ecdh_mode = {HAL_ECDSA_BRAINPOOL_P512R1, NULL, NULL};
-	SECTEST_CALL(sl_ecdh_compute_shared_secret(hnd, &ecdh_mode, SECTEST_KEY_IDX, data1));
+	SECTEST_CALL(sl_ecdh_compute_shared_secret(hnd, &ecdh_mode, SECTEST_KEY_IDX, &data1));
 
 	SECTEST_CALL(sl_set_certificate(hnd, SECTEST_KEY_IDX, &cert));
 
@@ -184,7 +202,7 @@ int seclink_test(void)
 	 */
 	SECTEST_CALL(sl_write_storage(hnd, SECTEST_KEY_IDX, &ss));
 
-	SECTEST_CALL(sl_read_storage(hnd, SECTEST_KEY_IDX, data1));
+	SECTEST_CALL(sl_read_storage(hnd, SECTEST_KEY_IDX, &data1));
 
 	SECTEST_CALL(sl_delete_storage(hnd, SECTEST_KEY_IDX));
 

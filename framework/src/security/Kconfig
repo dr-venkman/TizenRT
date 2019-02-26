@@ -1,0 +1,11 @@
+#
+# For a description of the syntax of this configuration file,
+# see kconfig-language at https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
+#
+
+config SECURITY_API
+    bool "Enable Security API"
+    default n
+	select SECURITY_LINK
+    ---help---
+        Easy APIs for applications to use and control Security features

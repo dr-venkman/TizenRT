@@ -32,8 +32,8 @@
 #include <tinyara/seclink.h>
 #include <tinyara/seclink_drv.h>
 #include "seclink_drv_req.h"
+#include "seclink_drv_utils.h"
 
-#define SECLINK_PATH "/dev/seclink"
 
 /****************************************************************************
  * Private Function Prototypes
@@ -63,30 +63,37 @@ static const struct file_operations g_seclink_fops = {
 
 int seclink_open(FAR struct file *filep)
 {
-	printf("-->%s\n", __FUNCTION__);
+	SLDRV_ENTER;
+
 	return 0;
 }
 
 int seclink_close(FAR struct file *filep)
 {
-	printf("-->%s\n", __FUNCTION__);
+	SLDRV_ENTER;
+
 	return 0;
 }
 
 ssize_t seclink_read(FAR struct file *filep, FAR char *buffer, size_t len)
 {
-	printf("-->%s\n", __FUNCTION__);
+	SLDRV_ENTER;
+
 	return 0;
 }
+
 ssize_t seclink_write(FAR struct file *filep, FAR const char *buffer, size_t len)
 {
-	printf("-->%s\n", __FUNCTION__);
+	SLDRV_ENTER;
+
 	return 0;
 }
 
 int seclink_ioctl(FAR struct file *filep, int cmd, unsigned long arg)
 {
-	printf("-->%s (%d)(%x)\n", __FUNCTION__, cmd, arg);
+	SLDRV_ENTER;
+
+	SLDRV_LOG("-->%s (%d)(%x)\n", __FUNCTION__, cmd, arg);
 
 	if (cmd == SECLINK_HAL_INIT || cmd == SECLINK_HAL_DEINIT) {
 		hd_handle_common_request(cmd, arg);

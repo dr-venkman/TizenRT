@@ -64,6 +64,7 @@ typedef enum {
 	HAL_HASH_SHA256,
 	HAL_HASH_SHA384,
 	HAL_HASH_SHA512,
+	HAL_HASH_UNKNOWN,
 } hal_hash_type;
 
 typedef enum {
@@ -89,6 +90,7 @@ typedef enum {
 	HAL_HMAC_SHA256,
 	HAL_HMAC_SHA384,
 	HAL_HMAC_SHA512,
+	HAL_HMAC_UNKNOWN,
 } hal_hmac_type;
 
 typedef enum {
@@ -146,6 +148,7 @@ typedef enum {
 	/* DH */
 	HAL_KEY_DH_1024,
 	HAL_KEY_DH_2048,
+	HAL_KEY_UNKNOWN,
 } hal_key_type;
 
 /* Structure */

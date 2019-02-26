@@ -54,19 +54,19 @@
 -include $(TOPDIR)/Make.defs
 include $(APPDIR)/Make.defs
 
-# Hello, World! built-in application info
+# Security built-in application info
 
 APPNAME = security_test
 FUNCNAME = $(APPNAME)_main
 THREADEXEC = TASH_EXECMD_ASYNC
 
-# Hello, World! Example
-
-
 
 ASRCS =
 CSRCS = hal_auth_test.c hal_crypto_test.c hal_keymgr_test.c hal_ss_test.c hal_test_utils.c
-CSRCS += seclink.c seclink_test.c
+CSRCS += seclink_test.c
+CSRCS += securityapi_test.c
+CSRCS += security_keymgr_test.c security_crypto_test.c security_ss_test.c security_auth_test.c
+CSRCS += security_test_utils.c
 
 MAINSRC = security_test_main.c
 

@@ -15,14 +15,13 @@
  * language governing permissions and limitations under the License.
  *
  ****************************************************************************/
-#ifndef __SECLINK_DRV_REQ_H__
-#define __SECLINK_DRV_REQ_H__
+#include <tinyara/config.h>
 
-int hd_handle_common_request(int cmd, unsigned long arg);
-int hd_handle_auth_reqeust(int cmd, unsigned long arg);
-int hd_handle_key_request(int cmd, unsigned long arg);
-int hd_handle_ss_request(int cmd, unsigned long arg);
-int hd_handle_crypto_request(int cmd, unsigned long arg);
+#include <security_api.h>
+#include "security_utils.h"
+#include "security_common.h"
 
-#endif // __SECLINK_DRV_REQ_H__
-
+int handle_ss_msg(security_ss_request req, security_param *data)
+{
+	SECURITY_RETURN(SECURITY_OK);
+}

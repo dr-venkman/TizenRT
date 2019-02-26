@@ -5,6 +5,12 @@
 
 config SECURITY_LINK_DRV
 	bool "seclink Driver Support"
+	select SECURITY_LINK
 	default n
 	---help---
 		Enable seclink Driver to support communication between HAL and security API.
+
+if SECURITY_LINK_DRV
+source "$FRAMEWORK_DIR/src/seclink/Kconfig""
+endif #SECURITY_LINK_DRV
+

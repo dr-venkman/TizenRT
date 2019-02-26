@@ -15,14 +15,33 @@
  * language governing permissions and limitations under the License.
  *
  ****************************************************************************/
-#ifndef __SECLINK_DRV_REQ_H__
-#define __SECLINK_DRV_REQ_H__
 
-int hd_handle_common_request(int cmd, unsigned long arg);
-int hd_handle_auth_reqeust(int cmd, unsigned long arg);
-int hd_handle_key_request(int cmd, unsigned long arg);
-int hd_handle_ss_request(int cmd, unsigned long arg);
-int hd_handle_crypto_request(int cmd, unsigned long arg);
+#include <tinyara/config.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <security/security_api.h>
 
-#endif // __SECLINK_DRV_REQ_H__
+void free_security_data(security_data *data)
+{
+    if (data->length) {
+		free(data->data);
+		data->length = 0;
+		data->data = 0;
+	}
+}
 
+void PrintBuffer(const char *header, unsigned char* buffer, uint32_t len)
+{
+    register uint32_t i = 0;
+
+    printf("%s : %d\n", header, len);
+
+    for (i = 0; i < len; i++) {
+        if (i != 0 && i % 16 == 0) {
+            printf("\n");
+        }
+        printf(" %02X", buffer[i]);
+    }
+    printf("\n");
+}

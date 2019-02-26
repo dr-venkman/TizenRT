@@ -2,7 +2,7 @@
 #define __SECLINK_H__
 
 #include <stdint.h>
-#include <security/hal/security_hal.h>
+#include <tinyara/security_hal.h>
 
 /*  common */
 #define SECLINK_HAL_INIT                         0x0001
