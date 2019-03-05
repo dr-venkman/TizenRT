@@ -571,7 +571,7 @@ int auth_get_ecdsa_signature(security_ecdsa_curve curve, const char *key_name, s
 	SECAPI_ENTER;
 
 	hal_ecdsa_curve hc = _convert_curve_stoh(curve);
-	hal_ecdsa_mode mode = {hc, HAL_HASH_UNKNOWN, NULL, NULL};
+	hal_ecdsa_mode mode = {hc, HAL_HASH_UNKNOWN};
 
 	/* convert path */
 	uint32_t key_idx = 0;
@@ -596,7 +596,7 @@ int auth_verify_ecdsa_signature(security_ecdsa_curve curve, const char *key_name
 	SECAPI_ENTER;
 
 	hal_ecdsa_curve hc = _convert_curve_stoh(curve);
-	hal_ecdsa_mode mode = {hc, HAL_HASH_UNKNOWN, NULL, NULL};
+	hal_ecdsa_mode mode = {hc, HAL_HASH_UNKNOWN};
 
 	/* convert path */
 	uint32_t key_idx = 0;
