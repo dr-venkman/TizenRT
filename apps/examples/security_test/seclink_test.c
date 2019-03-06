@@ -64,8 +64,6 @@ int seclink_test(void)
 	char *hmac_data = {"hash_sssssssssssstttttttttt"};
 	char *rsahash_data = {"rsahash_sssssssssssstttttttttt"};
 	char *sign_data = {"sign_sssssssssssstttttttttt"};
-	char *ecdsar_data = {"ecdsa_r_sssssssssssstttttttttt"};
-	char *ecdsas_data = {"ecdsa_s_sssssssssssstttttttttt"};
 	char *dhg_data = {"dh_G_sssssssssssstttttttttt"};
 	char *dhp_data = {"dh_P_sssssssssssstttttttttt"};
 	char *cert_data = {"certificate_sssssssssssstttttttttt"};
@@ -97,14 +95,6 @@ int seclink_test(void)
 	hal_data sign;
 	sign.data = sign_data;
 	sign.data_len = sizeof(sign_data);
-
-	hal_data ecdsar;
-	ecdsar.data = ecdsar_data;
-	ecdsar.data_len = sizeof(ecdsar_data);
-
-	hal_data ecdsas;
-	ecdsas.data = ecdsas_data;
-	ecdsas.data_len = sizeof(ecdsas_data);
 
 	hal_data dhg;
 	dhg.data = dhg_data;
@@ -160,7 +150,7 @@ int seclink_test(void)
 
 	SECTEST_CALL(sl_rsa_verify_md(hnd, rsa_mode, &rsahash, &sign, SECTEST_KEY_IDX));
 
-	hal_ecdsa_mode ecdsa_mode = {HAL_ECDSA_BRAINPOOL_P512R1, HAL_HASH_SHA224, &ecdsar, &ecdsas};
+	hal_ecdsa_mode ecdsa_mode = {HAL_ECDSA_BRAINPOOL_P512R1, HAL_HASH_SHA224};
 	SECTEST_CALL(sl_ecdsa_sign_md(hnd, ecdsa_mode, &hash, SECTEST_KEY_IDX, &data1));
 
 	SECTEST_CALL(sl_ecdsa_verify_md(hnd, ecdsa_mode, &hash, &sign, SECTEST_KEY_IDX));

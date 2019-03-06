@@ -52,9 +52,10 @@
 
 -include $(TOPDIR)/.config
 -include $(TOPDIR)/Make.defs
-
-ASRCS		=
-CSRCS		= 
+MBEDTLS_ALT_DIR = $(TOPDIR)/../external/mbedtls/alt
+ASRCS =
+CSRCS =
+CFLAGS += -I$(MBEDTLS_ALT_DIR)
 
 CFLAGS += -I$(TOPDIR)/../external/include/
 
@@ -141,6 +142,7 @@ depend: .depend
 clean:
 	$(call DELFILE, .built)
 	$(call CLEAN)
+	$(Q) find . -name "*.o" -exec rm -rf {} \;
 
 distclean: clean
 	$(call DELFILE, Make.dep)
