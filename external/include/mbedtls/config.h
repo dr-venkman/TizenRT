@@ -62,7 +62,7 @@
 #endif
 
 #ifdef MBED_TIZENRT
-#define MBEDTLS_MAXIMUM_HANDSHAKE_MEMORY_USAGE ( 60 * 1024 )
+#define MBEDTLS_MAXIMUM_HANDSHAKE_MEMORY_USAGE ( 36 * 1024 )
 #endif
 
 /**
@@ -463,7 +463,7 @@
  * Requires MBEDTLS_ENTROPY_C, MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES
  *
  */
-#define MBEDTLS_TEST_NULL_ENTROPY
+//#define MBEDTLS_TEST_NULL_ENTROPY
 
 /**
  * \def MBEDTLS_ENTROPY_HARDWARE_ALT
@@ -990,7 +990,7 @@
  *
  * Uncomment this macro to prevent loading of default entropy functions.
  */
-#define MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES
+//#define MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES
 
 /**
  * \def MBEDTLS_NO_PLATFORM_ENTROPY
@@ -1535,7 +1535,7 @@
  *
  * Uncomment this to enable pthread mutexes.
  */
-#define MBEDTLS_THREADING_PTHREAD
+//#define MBEDTLS_THREADING_PTHREAD
 
 /**
  * \def MBEDTLS_VERSION_FEATURES
@@ -2633,7 +2633,7 @@
  *
  * Enable this layer to allow use of mutexes within mbed TLS
  */
-#define MBEDTLS_THREADING_C
+//#define MBEDTLS_THREADING_C
 
 /**
  * \def MBEDTLS_TIMING_C

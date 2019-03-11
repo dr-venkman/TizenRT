@@ -66,8 +66,6 @@ ASRCS =
 CSRCS =
 MAINSRC = tls_selftest_main.c
 
-CFLAGS += -I$(TOPDIR)/../external/include/
-
 AOBJS = $(ASRCS:.S=$(OBJEXT))
 COBJS = $(CSRCS:.c=$(OBJEXT))
 MAINOBJ = $(MAINSRC:.c=$(OBJEXT))

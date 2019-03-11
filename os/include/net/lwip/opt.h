@@ -1478,7 +1478,7 @@
  * address equal to the netif IP address, looping them back up the stack.
  */
 #ifndef LWIP_NETIF_LOOPBACK
-#define LWIP_NETIF_LOOPBACK             1
+#define LWIP_NETIF_LOOPBACK             0
 #endif
 
 /**
@@ -1532,7 +1532,7 @@
  * sys_thread_new() when the thread is created.
  */
 #ifndef TCPIP_THREAD_STACKSIZE
-#define TCPIP_THREAD_STACKSIZE          1024
+#define TCPIP_THREAD_STACKSIZE          0
 #endif
 
 /**
@@ -1550,7 +1550,7 @@
  * sys_mbox_new() when tcpip_init is called.
  */
 #ifndef TCPIP_MBOX_SIZE
-#define TCPIP_MBOX_SIZE                 16
+#define TCPIP_MBOX_SIZE                 0
 #endif
 
 /**
@@ -1574,7 +1574,7 @@
  * sys_thread_new() when the thread is created.
  */
 #ifndef SLIPIF_THREAD_STACKSIZE
-#define SLIPIF_THREAD_STACKSIZE         1024
+#define SLIPIF_THREAD_STACKSIZE         0
 #endif
 
 /**
@@ -1599,7 +1599,7 @@
  * sys_thread_new() when the thread is created.
  */
 #ifndef DEFAULT_THREAD_STACKSIZE
-#define DEFAULT_THREAD_STACKSIZE        1024
+#define DEFAULT_THREAD_STACKSIZE        0
 #endif
 
 /**
@@ -1617,7 +1617,7 @@
  * to sys_mbox_new() when the recvmbox is created.
  */
 #ifndef DEFAULT_RAW_RECVMBOX_SIZE
-#define DEFAULT_RAW_RECVMBOX_SIZE       16
+#define DEFAULT_RAW_RECVMBOX_SIZE       0
 #endif
 
 /**
@@ -1626,7 +1626,7 @@
  * to sys_mbox_new() when the recvmbox is created.
  */
 #ifndef DEFAULT_UDP_RECVMBOX_SIZE
-#define DEFAULT_UDP_RECVMBOX_SIZE       16
+#define DEFAULT_UDP_RECVMBOX_SIZE       0
 #endif
 
 /**
@@ -1635,7 +1635,7 @@
  * to sys_mbox_new() when the recvmbox is created.
  */
 #ifndef DEFAULT_TCP_RECVMBOX_SIZE
-#define DEFAULT_TCP_RECVMBOX_SIZE       16
+#define DEFAULT_TCP_RECVMBOX_SIZE       0
 #endif
 
 /**
@@ -1644,7 +1644,7 @@
  * sys_mbox_new() when the acceptmbox is created.
  */
 #ifndef DEFAULT_ACCEPTMBOX_SIZE
-#define DEFAULT_ACCEPTMBOX_SIZE         16
+#define DEFAULT_ACCEPTMBOX_SIZE         0
 #endif
 /**
  * @}

@@ -61,8 +61,6 @@ ASRCS		=
 CSRCS		= dhcpc.c
 endif
 
-CFLAGS += -I$(TOPDIR)/../external/include/
-
 AOBJS		= $(ASRCS:.S=$(OBJEXT))
 COBJS		= $(CSRCS:.c=$(OBJEXT))
 

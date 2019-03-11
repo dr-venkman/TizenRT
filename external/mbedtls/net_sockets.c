@@ -200,7 +200,7 @@ int mbedtls_net_bind( mbedtls_net_context *ctx, const char *bind_ip, const char 
     ret = MBEDTLS_ERR_NET_UNKNOWN_HOST;
     for( cur = addr_list; cur != NULL; cur = cur->ai_next )
     {
-    	ctx->fd = (int) socket( cur->ai_family, cur->ai_socktype,
+        ctx->fd = (int) socket( cur->ai_family, cur->ai_socktype,
                             cur->ai_protocol );
         if( ctx->fd < 0 )
         {
@@ -227,7 +227,7 @@ int mbedtls_net_bind( mbedtls_net_context *ctx, const char *bind_ip, const char 
         /* Listen only makes sense for TCP */
         if( proto == MBEDTLS_NET_PROTO_TCP )
         {
-        	if( listen( ctx->fd, MBEDTLS_NET_LISTEN_BACKLOG ) != 0 )
+            if( listen( ctx->fd, MBEDTLS_NET_LISTEN_BACKLOG ) != 0 )
             {
                 close( ctx->fd );
                 ret = MBEDTLS_ERR_NET_LISTEN_FAILED;

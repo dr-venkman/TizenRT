@@ -334,16 +334,16 @@ static void sighandler( int signum )
 
 void mbedtls_set_alarm( int seconds )
 {
-#if !defined(MBED_TIZNERT)
+#if !defined(MBED_TIZENRT)
     mbedtls_timing_alarmed = 0;
     signal( SIGALRM, sighandler );
-//    alarm( seconds );
-//    if( seconds == 0 )
-//    {
-//        /* alarm(0) cancelled any previous pending alarm, but the
-//           handler won't fire, so raise the flag straight away. */
-//        mbedtls_timing_alarmed = 1;
-//    }
+    alarm( seconds );
+    if( seconds == 0 )
+    {
+        /* alarm(0) cancelled any previous pending alarm, but the
+           handler won't fire, so raise the flag straight away. */
+        mbedtls_timing_alarmed = 1;
+    }
 #endif
 }
 

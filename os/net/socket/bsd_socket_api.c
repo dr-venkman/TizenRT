@@ -209,6 +209,7 @@ int socket(int domain, int type, int protocol)
 	if (!socket_argument_validation(domain, type, protocol)) {
 		return lwip_socket(domain, type, protocol);
 	}
+
 	return -1;
 }
 

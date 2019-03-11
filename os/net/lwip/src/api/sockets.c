@@ -1916,6 +1916,7 @@ static void event_callback(struct netconn *conn, enum netconn_evt evt, u16_t len
 			s = conn->socket;
 			SYS_ARCH_UNPROTECT(lev);
 		}
+
 		sock = get_socket(s);
 		if (!sock) {
 			return;
