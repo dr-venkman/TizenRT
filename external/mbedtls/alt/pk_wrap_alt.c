@@ -75,7 +75,6 @@
 #include "mbedtls/asn1.h"
 
 #include "mbedtls/alt/common.h"
-#include "mbedtls/alt/pk_alt.h"
 
 #if defined(MBEDTLS_RSA_C)
 
