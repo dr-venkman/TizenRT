@@ -59,7 +59,7 @@ int security_test_main(int argc, char *argv[])
 	if (res < 0) {
 		printf("hal crypto test fail\n");
 	}
-
+/*
 	res = seclink_test();
 	if (res < 0) {
 		printf("sec link test fail\n");
@@ -69,5 +69,6 @@ int security_test_main(int argc, char *argv[])
 	if (res < 0) {
 		printf("security API test fail\n");
 	}
+*/
 	return 0;
 }
