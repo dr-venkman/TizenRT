@@ -16,6 +16,7 @@ Make.dep
 .gdbinit
 cscope.out
 tags
+*.pyc
 
 # ctags index file
 .tags
@@ -26,3 +27,5 @@ tags
 *.tmp
 *.tmp.*
 /external/security/hal/test/.sconsign.dblite
+*.log
+*.log.old

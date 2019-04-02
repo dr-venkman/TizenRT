@@ -29,6 +29,7 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <tinyara/testcase_drv.h>
+#include <tinyara/sched.h>
 #include "../../../../../os/kernel/clock/clock.h"
 #include "tc_internal.h"
 
@@ -43,8 +44,6 @@
 #else
 #define NTHREAD  3
 #endif
-#define MAX_TASKS_MASK      (CONFIG_MAX_TASKS-1)
-#define PIDHASH(pid)        ((pid) & MAX_TASKS_MASK)
 #define TEST_STACK_SIZE     (1024)
 /****************************************************************************
 * Private Data
@@ -313,6 +312,8 @@ static void tc_roundrobin_rr_taskNpthread(void)
 {
 	int tc;
 	int ret;
+	int fd;
+	fd = tc_get_drvfd();
 	ret = pthread_attr_set();
 	TC_ASSERT_NEQ("pthread_attr_set", ret, ERROR);
 
@@ -336,8 +337,7 @@ static void tc_roundrobin_rr_taskNpthread(void)
 		pid_prio[PIDHASH(task_pid)] = priority[tc][0];
 
 		if (task_pid != ERROR) {
-			FAR struct tcb_s *ptr;
-			while ((ptr = sched_gettcb(task_pid)) != NULL) {
+			while (ioctl(fd, TESTIOC_IS_ALIVE_THREAD, task_pid) != ERROR) {
 				usleep(100);
 			}
 		}

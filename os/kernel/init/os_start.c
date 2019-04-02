@@ -529,7 +529,7 @@ void os_start(void)
 	fs_auto_mount();
 
 #ifdef CONFIG_KERNEL_TEST_DRV
-	test_drv_register();
+	kernel_test_drv_register();
 #endif
 
 #ifdef CONFIG_SECURITY_LINK_DRV

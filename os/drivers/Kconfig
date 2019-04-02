@@ -1,7 +1,10 @@
+#
+# For a description of the syntax of this configuration file,
+# see kconfig-language at https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
+#
 
 config DISABLE_POLL
-	bool
-	prompt "Disable driver poll interfaces" if NFILE_DESCRIPTORS != 0
+	bool "Disable driver poll interfaces" if NFILE_DESCRIPTORS != 0
 	default n if NFILE_DESCRIPTORS != 0
 	default y if NFILE_DESCRIPTORS = 0
 	---help---
@@ -390,6 +393,8 @@ if ANALOG
 source drivers/analog/Kconfig
 endif # ANALOG
 
+source drivers/testcase/Kconfig
+
 menuconfig NETDEVICES
 	bool "Network Device/PHY Support"
 	default n if !ARCH_HAVE_PHY
@@ -462,6 +467,16 @@ menuconfig USBDEV
 if USBDEV
 source drivers/usbdev/Kconfig
 endif # USBDEV
+
+menuconfig USBHOST
+        bool "USB Host Driver Support"
+        default n
+        ---help---
+                USB host drivers.  See also include/nuttx/usb/usbhost.h
+
+if USBHOST
+source drivers/usbhost/Kconfig
+endif # USBHOST
 
 config FOTA_DRIVER
 	bool "FOTA Device Driver Support"

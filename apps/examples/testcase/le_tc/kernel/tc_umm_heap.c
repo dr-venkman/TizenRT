@@ -30,6 +30,7 @@
 #include <errno.h>
 #include <sched.h>
 #include <tinyara/mm/mm.h>
+#include <tinyara/sched.h>
 #include "tc_internal.h"
 
 #define ALLOC_SIZE_VAL 10
@@ -68,7 +69,7 @@ static void tc_umm_heap_malloc_free(void)
 	int alloc_tc_cnt;
 	pid_t hash_pid;
 	struct mm_heap_s *heap;
-	hash_pid = PID_HASH(getpid());
+	hash_pid = PIDHASH(getpid());
 
 	for (alloc_tc_cnt = 0; alloc_tc_cnt < TEST_TIMES; alloc_tc_cnt++) {
 		for (alloc_cnt = 0; alloc_cnt < ALLOC_FREE_TIMES; alloc_cnt++) {
@@ -76,6 +77,7 @@ static void tc_umm_heap_malloc_free(void)
 			TC_ASSERT_NEQ("malloc", mem_ptr[alloc_cnt], NULL);
 		}
 		heap = mm_get_heap(mem_ptr[alloc_cnt - 1]);
+		TC_ASSERT_NEQ_CLEANUP("malloc", heap, NULL, mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES));
 		TC_ASSERT_EQ_ERROR_CLEANUP("malloc", heap->alloc_list[hash_pid].curr_alloc_size, TOTAL_ALLOC_SIZE, get_errno(), mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES));
 		mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES);
 		TC_ASSERT_EQ("malloc", heap->alloc_list[hash_pid].curr_alloc_size, ALL_FREE);
@@ -100,7 +102,7 @@ static void tc_umm_heap_calloc(void)
 	int alloc_tc_cnt;
 	pid_t hash_pid;
 	struct mm_heap_s *heap;
-	hash_pid = PID_HASH(getpid());
+	hash_pid = PIDHASH(getpid());
 
 	for (alloc_tc_cnt = 0; alloc_tc_cnt < TEST_TIMES; alloc_tc_cnt++) {
 		for (alloc_cnt = 0; alloc_cnt < ALLOC_FREE_TIMES; alloc_cnt++) {
@@ -108,6 +110,7 @@ static void tc_umm_heap_calloc(void)
 			TC_ASSERT_NEQ("calloc", mem_ptr[alloc_cnt], NULL);
 		}
 		heap = mm_get_heap(mem_ptr[alloc_cnt - 1]);
+		TC_ASSERT_NEQ_CLEANUP("calloc", heap, NULL, mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES));
 		TC_ASSERT_EQ_ERROR_CLEANUP("calloc", heap->alloc_list[hash_pid].curr_alloc_size, TOTAL_ALLOC_SIZE, get_errno(), mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES));
 		mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES);
 
@@ -135,7 +138,7 @@ static void tc_umm_heap_realloc(void)
 	int alloc_tc_cnt;
 	pid_t hash_pid;
 	struct mm_heap_s *heap;
-	hash_pid = PID_HASH(getpid());
+	hash_pid = PIDHASH(getpid());
 
 	for (alloc_tc_cnt = 0; alloc_tc_cnt < TEST_TIMES; alloc_tc_cnt++) {
 		for (alloc_cnt = 0; alloc_cnt < ALLOC_FREE_TIMES; alloc_cnt++) {
@@ -143,6 +146,7 @@ static void tc_umm_heap_realloc(void)
 			TC_ASSERT_NEQ("realloc", mem_ptr[alloc_cnt], NULL);
 		}
 		heap = mm_get_heap(mem_ptr[alloc_cnt - 1]);
+		TC_ASSERT_NEQ_CLEANUP("realloc", heap, NULL, mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES));
 		TC_ASSERT_EQ_ERROR_CLEANUP("realloc", heap->alloc_list[hash_pid].curr_alloc_size, TOTAL_ALLOC_SIZE, get_errno(), mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES));
 		mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES);
 
@@ -168,7 +172,7 @@ static void tc_umm_heap_memalign(void)
 	int alloc_tc_cnt;
 	pid_t hash_pid;
 	struct mm_heap_s *heap;
-	hash_pid = PID_HASH(getpid());
+	hash_pid = PIDHASH(getpid());
 
 	for (alloc_tc_cnt = 0; alloc_tc_cnt < TEST_TIMES; alloc_tc_cnt++) {
 		for (alloc_cnt = 0; alloc_cnt < ALLOC_FREE_TIMES; alloc_cnt++) {
@@ -176,6 +180,7 @@ static void tc_umm_heap_memalign(void)
 			TC_ASSERT_NEQ("memalign", mem_ptr[alloc_cnt], NULL);
 		}
 		heap = mm_get_heap(mem_ptr[alloc_cnt - 1]);
+		TC_ASSERT_NEQ_CLEANUP("memalign", heap, NULL, mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES));
 		TC_ASSERT_EQ_ERROR_CLEANUP("memalign", heap->alloc_list[hash_pid].curr_alloc_size, TOTAL_ALLOC_SIZE, get_errno(), mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES));
 		mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES);
 
@@ -198,18 +203,20 @@ static void tc_umm_heap_random_malloc(void)
 {
 	struct mallinfo info;
 	int *mem_ptr[ALLOC_FREE_TIMES] = { NULL };
+	int *valid_ptr = NULL;
 	int allocated[ALLOC_FREE_TIMES] = { 0 };
 	int alloc_cnt;
 	int alloc_tc_cnt;
 	int allocated_size = 0;
 	pid_t hash_pid;
 	struct mm_heap_s *heap;
-	hash_pid = PID_HASH(getpid());
+	hash_pid = PIDHASH(getpid());
 
 	srand(time(NULL));
 
 	for (alloc_tc_cnt = 0; alloc_tc_cnt < TEST_TIMES; alloc_tc_cnt++) {
 		allocated_size = 0;
+		valid_ptr = NULL;
 		for (alloc_cnt = 0; alloc_cnt < ALLOC_FREE_TIMES; alloc_cnt++) {
 			allocated[alloc_cnt] = rand() + 1;
 #ifdef CONFIG_CAN_PASS_STRUCTS
@@ -234,9 +241,11 @@ static void tc_umm_heap_random_malloc(void)
 			   because of the chunk size */
 			if (allocated[alloc_cnt] > 0) {
 				allocated_size += MM_ALIGN_UP(allocated[alloc_cnt] + SIZEOF_MM_ALLOCNODE);
+				valid_ptr = mem_ptr[alloc_cnt];
 			}
 		}
-		heap = mm_get_heap(mem_ptr[alloc_cnt - 1]);
+		heap = mm_get_heap(valid_ptr);
+		TC_ASSERT_NEQ_CLEANUP("malloc", heap, NULL, mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES));
 		TC_ASSERT_EQ_ERROR_CLEANUP("malloc", heap->alloc_list[hash_pid].curr_alloc_size, allocated_size, get_errno(), mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES));
 		mem_deallocate_func(mem_ptr, ALLOC_FREE_TIMES);
 		TC_ASSERT_EQ("random_malloc", heap->alloc_list[hash_pid].curr_alloc_size, ALL_FREE);
