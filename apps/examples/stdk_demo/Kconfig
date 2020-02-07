@@ -1,0 +1,23 @@
+#
+# For a description of the syntax of this configuration file,
+# see kconfig-language at https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
+#
+
+config EXAMPLES_STDK_DEMO
+	bool "STDK demo"
+	default n
+	---help---
+		STDK Demo Application
+
+config USER_ENTRYPOINT
+	string
+	default "stdk_demo_main" if ENTRY_STDK_DEMO
+
+if EXAMPLES_STDK_DEMO
+
+config STDK_DEMO_COUNTDOWNVAL
+	int "Countdown value"
+	default 12
+	---help---
+		Set countdown value for seven segment display
+endif

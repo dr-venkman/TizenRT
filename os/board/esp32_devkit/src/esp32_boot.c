@@ -160,7 +160,21 @@ static void board_gpio_initialize(void)
 			19, INPUT_PULLDOWN
 		}, {
 			21, INPUT_PULLDOWN
-		},
+		}, {
+			12, INPUT_PULLDOWN
+		}, {
+			13, INPUT_PULLDOWN
+		}, {
+			14, INPUT_PULLDOWN
+		}, {
+			22, INPUT_PULLDOWN
+		}, {
+			23, INPUT_PULLDOWN
+		}, {
+			25, INPUT_PULLDOWN
+		}, {
+			26, INPUT_PULLDOWN
+		}
 	};
 
 	for (i = 0; i < sizeof(pins) / sizeof(*pins); i++) {

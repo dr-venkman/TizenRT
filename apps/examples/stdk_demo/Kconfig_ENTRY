@@ -1,0 +1,3 @@
+config ENTRY_STDK_DEMO
+	bool "STDK Demo"
+	depends on EXAMPLES_STDK_DEMO
